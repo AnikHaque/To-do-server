@@ -31,6 +31,33 @@ app.get('/records', async(req, res) => {
     const records = await cursor.toArray();
     res.send(records);
 })
+
+app.get('/records/:id', async(req,res)=>{
+    const id = req.params.id;
+    const query = {_id:ObjectId(id)};
+    const result = await recordscollection.findOne(query);
+    res.send(result);
+})
+
+app.put('/records/:id', async(req,res)=>{
+    const id = req.params.id;
+    const updated = req.body;
+    const filter = {_id:ObjectId(id)};
+    const options = {upsert:true};
+    const updatedDoc = {
+        $set:updated
+    }
+    const result = await recordscollection.updateOne(filter,updatedDoc,options);
+    res.send(result);
+})
+
+app.delete('/records/:id', async(req,res) => {
+const id = req.params.id;
+const query = {_id:ObjectId(id)};
+const result = await recordscollection.deleteOne(query);
+res.send(result);
+})
+
 // app.get('/user',  async (req, res) => {
 //   const users = await userCollection.find().toArray();
 //   res.send(users);
